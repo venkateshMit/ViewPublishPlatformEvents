@@ -1,0 +1,39 @@
+<apex:page standardStylesheets="false" showHeader="false" sidebar="false">
+    <div id="content">
+    </div>
+    <apex:includeScript value="{!$Resource.cometd}"/>
+    <apex:includeScript value="{!$Resource.jquery}"/>
+    <apex:includeScript value="{!$Resource.json2}"/>
+    <apex:includeScript value="{!$Resource.jquery_cometd}"/>
+
+    
+   
+   
+    <script type="text/javascript">
+    (function($){
+        $(document).ready(function() {
+            $.cometd.configure({
+                url: window.location.protocol+'//'+window.location.hostname+ (null != window.location.port ? (':'+window.location.port) : '') +'/cometd/40.0/',
+                requestHeaders: { Authorization: 'OAuth {!$Api.Session_ID}'}
+            });
+            $.cometd.handshake();
+            $.cometd.addListener('/meta/handshake', function(message) {
+                $.cometd.subscribe('/event/Contact_Evt__e', function(message) {
+                    var div = document.getElementById('content');
+                                    div.innerHTML = div.innerHTML + '<p>Notification </p><br/>' +
+                        'Streaming Message ' + JSON.stringify(message) + '</p><br>';
+                });
+                
+    
+            })
+        
+        
+           
+                
+        
+        });
+    })(jQuery)
+    </script>
+    
+    
+</apex:page>
